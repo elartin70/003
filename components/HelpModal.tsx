@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Share, PlusSquare, Menu, Smartphone, Download, Upload } from 'lucide-react';
+import { X, Share, PlusSquare, Smartphone, Download, Upload } from 'lucide-react';
 
 interface HelpModalProps {
   isOpen: boolean;

@@ -53,11 +53,11 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({ isOpen
         
         <div className="p-6 space-y-6">
           <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg text-sm text-blue-800">
-             <strong>¿Cómo compartir con mi hermana?</strong>
+             <strong>¿Cómo muevo mis datos?</strong>
              <ul className="list-disc pl-4 mt-2 space-y-1">
-               <li>Descarga una copia de seguridad (botón verde).</li>
-               <li>Envía el archivo descargado por WhatsApp o Email.</li>
-               <li>Ella debe entrar aquí y usar el botón "Restaurar Copia".</li>
+               <li>Usa el botón <b>verde</b> para guardar lo que tienes ahora.</li>
+               <li>Envía ese archivo a tu celular o a tu hermana.</li>
+               <li>Usa el botón <b>blanco</b> para cargar ese archivo.</li>
              </ul>
           </div>
 
@@ -70,8 +70,8 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({ isOpen
                  <Download className="text-emerald-700 w-6 h-6" />
                </div>
                <div className="text-left">
-                  <span className="block font-bold text-emerald-900">Descargar Copia de Seguridad</span>
-                  <span className="block text-xs text-emerald-600">Para enviárselo a tu hermana</span>
+                  <span className="block font-bold text-emerald-900">Descargar Copia Actual</span>
+                  <span className="block text-xs text-emerald-600">Guardar archivo en este dispositivo</span>
                </div>
              </button>
 
@@ -91,8 +91,8 @@ export const DataManagementModal: React.FC<DataManagementModalProps> = ({ isOpen
                    <Upload className="text-slate-600 group-hover:text-blue-700 w-6 h-6" />
                  </div>
                  <div className="text-left">
-                    <span className="block font-bold text-slate-700 group-hover:text-blue-800">Restaurar Copia</span>
-                    <span className="block text-xs text-slate-400 group-hover:text-blue-500">Cargar archivo recibido</span>
+                    <span className="block font-bold text-slate-700 group-hover:text-blue-800">Restaurar / Cargar</span>
+                    <span className="block text-xs text-slate-400 group-hover:text-blue-500">Buscar archivo .json de respaldo</span>
                  </div>
                </button>
              </div>
