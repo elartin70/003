@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { AppState, Property, TransactionType, ServiceType, TransactionAgent, Transaction } from '../types';
 import { formatCurrency } from '../services/storageService';
-import { Plus, Check, X, AlertCircle, Trash2, FileSpreadsheet, Download, ArrowRightLeft, User, Users, Wallet, Pencil } from 'lucide-react';
+import { Plus, Check, X, AlertCircle, Trash2, FileSpreadsheet, Download, ArrowRightLeft, User, Users, Wallet, Pencil, MapPin } from 'lucide-react';
 
 interface MonthlySheetProps {
   month: number;
@@ -57,13 +57,20 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
         t.rentYear === year
       );
       
-      // 2. Calculate Expenses (Expenses recorded with a date within this month)
+      // 2. Calculate Expenses
+      // LOGIC UPDATE: Prioritize 'rentMonth/rentYear' (assigned period) if it exists.
+      // If it doesn't exist, fall back to the actual date (compatibility).
       const expenses = state.transactions.filter(t => {
+        if (t.propertyId !== property.id || t.type !== TransactionType.EXPENSE) return false;
+
+        // Check assigned period first
+        if (t.rentMonth !== undefined && t.rentYear !== undefined) {
+           return t.rentMonth === month && t.rentYear === year;
+        }
+
+        // Fallback to date check
         const tDate = new Date(t.date);
-        return t.propertyId === property.id && 
-               t.type === TransactionType.EXPENSE &&
-               tDate.getMonth() === month &&
-               tDate.getFullYear() === year;
+        return tDate.getMonth() === month && tDate.getFullYear() === year;
       });
 
       const totalExpense = expenses.reduce((sum, t) => sum + t.amount, 0);
@@ -204,6 +211,7 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
                         <>
                           <div className="font-bold text-slate-800">{row.property.name}</div>
                           <div className="text-xs text-slate-500">{row.property.tenantName}</div>
+                          <div className="text-xs text-slate-400 mt-0.5">{row.property.address}</div>
                         </>
                       )}
                       {row.property.isCommon && (
@@ -363,7 +371,12 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
             <div className={`p-3 border-b flex justify-between items-start ${row.property.isCommon ? 'bg-amber-50' : 'bg-slate-50'}`}>
               <div>
                  <h3 className="font-bold text-slate-800">{row.property.name}</h3>
-                 {!row.property.isCommon && <p className="text-xs text-slate-500">{row.property.tenantName}</p>}
+                 {!row.property.isCommon && (
+                   <>
+                     <p className="text-xs text-slate-500">{row.property.tenantName}</p>
+                     <p className="text-xs text-slate-400">{row.property.address}</p>
+                   </>
+                 )}
                  {row.property.isCommon && <p className="text-xs text-amber-600">Gastos Comunes</p>}
               </div>
               <button 

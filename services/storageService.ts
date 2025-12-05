@@ -5,11 +5,11 @@ const STORAGE_KEY = 'rent_control_data_v3';
 const COMMON_PROPERTY_ID = 'common-shared-expenses';
 
 const INITIAL_PROPERTIES: Property[] = [
-  { id: '1', name: 'Depto Centro', address: 'Av. Corrientes 1234', tenantName: 'Juan Pérez', rentAmount: 150000, dueDay: 5 },
-  { id: '2', name: 'Casa Quinta', address: 'Los Alamos 440', tenantName: 'Maria Rodriguez', rentAmount: 220000, dueDay: 10 },
-  { id: '3', name: 'Local Comercial', address: 'San Martin 880', tenantName: 'Carlos Gomez', rentAmount: 300000, dueDay: 1 },
-  { id: '4', name: 'Depto 2 Ambientes', address: 'Belgrano 450', tenantName: 'Lucía Fernández', rentAmount: 120000, dueDay: 5 },
-  { id: '5', name: 'Cochera / Depósito', address: 'Mitre 200', tenantName: 'Roberto Díaz', rentAmount: 50000, dueDay: 1 },
+  { id: '1', name: 'Propiedad 1', address: 'Dirección 1', tenantName: 'Inquilino 1', rentAmount: 0, dueDay: 5 },
+  { id: '2', name: 'Propiedad 2', address: 'Dirección 2', tenantName: 'Inquilino 2', rentAmount: 0, dueDay: 5 },
+  { id: '3', name: 'Propiedad 3', address: 'Dirección 3', tenantName: 'Inquilino 3', rentAmount: 0, dueDay: 5 },
+  { id: '4', name: 'Propiedad 4', address: 'Dirección 4', tenantName: 'Inquilino 4', rentAmount: 0, dueDay: 5 },
+  { id: '5', name: 'Propiedad 5', address: 'Dirección 5', tenantName: 'Inquilino 5', rentAmount: 0, dueDay: 5 },
 ];
 
 const COMMON_PROPERTY: Property = {
@@ -35,10 +35,11 @@ export const loadState = (): AppState => {
     
     if (serializedState !== null) {
       const parsed = JSON.parse(serializedState);
+      // Merge logic: ensure we respect the loaded properties if they exist
       state = { ...INITIAL_STATE, ...parsed };
     }
 
-    // Ensure the "Common" property always exists, even if loading old data
+    // Ensure the "Common" property always exists
     if (!state.properties.find(p => p.id === COMMON_PROPERTY_ID)) {
       state.properties = [...state.properties, COMMON_PROPERTY];
     }

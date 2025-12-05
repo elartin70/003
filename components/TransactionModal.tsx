@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Users, Trash2 } from 'lucide-react';
+import { X, User, Users, Trash2, CalendarDays } from 'lucide-react';
 import { TransactionType, ExpenseCategory, Property, TransactionAgent } from '../types';
 
 interface TransactionModalProps {
@@ -21,7 +21,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
   const [handledBy, setHandledBy] = useState<TransactionAgent>(TransactionAgent.ME);
   const [editingId, setEditingId] = useState<string | null>(null);
   
-  // New fields for Rent Period
+  // New fields for Rent Period (now used for Expenses too)
   const currentDate = new Date();
   const [rentMonth, setRentMonth] = useState(currentDate.getMonth());
   const [rentYear, setRentYear] = useState(currentDate.getFullYear());
@@ -55,11 +55,41 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
         setPropertyId(properties[0]?.id || '');
         setDate(new Date().toISOString().split('T')[0]);
         setHandledBy(TransactionAgent.ME);
+        
+        // Use current date or provided defaults
         setRentMonth(new Date().getMonth());
         setRentYear(new Date().getFullYear());
       }
     }
   }, [isOpen, initialData, properties]);
+
+  // SMART LOGIC: Auto-update Date and Description when Rent Period changes
+  // Only applies when ADDING a new transaction (not editing) and type is INCOME
+  useEffect(() => {
+    if (isOpen && !editingId && type === TransactionType.INCOME) {
+      // 1. Set Description
+      setDescription(`Alquiler ${months[rentMonth]}`);
+
+      // 2. Set Date to 5th of the NEXT month (Mes Vencido logic)
+      let nextMonth = rentMonth + 1;
+      let year = rentYear;
+      
+      // Handle December rollover (Month 11 -> Month 0 of next year)
+      if (nextMonth > 11) {
+        nextMonth = 0;
+        year = year + 1;
+      }
+
+      // Create date object for Day 5 of next month
+      const suggestedDate = new Date(year, nextMonth, 5);
+      
+      const yyyy = suggestedDate.getFullYear();
+      const mm = String(suggestedDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(suggestedDate.getDate()).padStart(2, '0');
+      
+      setDate(`${yyyy}-${mm}-${dd}`);
+    }
+  }, [rentMonth, rentYear, type, isOpen, editingId]);
 
   if (!isOpen) return null;
 
@@ -73,8 +103,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
       type,
       category: type === TransactionType.EXPENSE ? category : undefined,
       description,
-      rentMonth: type === TransactionType.INCOME ? rentMonth : undefined,
-      rentYear: type === TransactionType.INCOME ? rentYear : undefined,
+      // Pass rentMonth/rentYear for BOTH Income and Expenses now
+      rentMonth: rentMonth,
+      rentYear: rentYear,
       handledBy
     });
     onClose();
@@ -91,8 +122,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
-        <div className="flex justify-between items-center p-4 border-b border-slate-100 bg-slate-50">
+      <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center p-4 border-b border-slate-100 bg-slate-50 sticky top-0 z-10">
           <h2 className="text-lg font-semibold text-slate-800">
             {editingId ? 'Editar Transacción' : 'Nueva Transacción'}
           </h2>
@@ -107,7 +138,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
           <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-lg">
             <button
               type="button"
-              disabled={!!editingId} // Disable type switch when editing to avoid confusion
+              disabled={!!editingId} 
               onClick={() => setType(TransactionType.INCOME)}
               className={`py-2 text-sm font-medium rounded-md transition-all ${type === TransactionType.INCOME ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700 disabled:opacity-50'}`}
             >
@@ -164,43 +195,57 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
             </select>
           </div>
 
-          {/* Rent Period Selectors - Only for Income */}
-          {type === TransactionType.INCOME && (
-             <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
-                <label className="block text-xs font-semibold text-emerald-800 mb-2 uppercase tracking-wide">
-                  Período a cancelar
+          {/* Period Selector (NOW FOR BOTH INCOME AND EXPENSE) */}
+          <div className={`${type === TransactionType.INCOME ? 'bg-emerald-50 border-emerald-100' : 'bg-slate-50 border-slate-200'} p-3 rounded-lg border`}>
+             <div className="flex items-center gap-2 mb-2">
+                <CalendarDays size={14} className={type === TransactionType.INCOME ? 'text-emerald-700' : 'text-slate-500'} />
+                <label className={`block text-xs font-bold uppercase tracking-wide ${type === TransactionType.INCOME ? 'text-emerald-800' : 'text-slate-600'}`}>
+                  Período / Mes Contable
                 </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <select 
-                      value={rentMonth}
-                      onChange={(e) => setRentMonth(parseInt(e.target.value))}
-                      className="w-full rounded-md border-emerald-200 border p-2 text-sm text-slate-700 focus:ring-1 focus:ring-emerald-500 outline-none"
-                    >
-                      {months.map((m, idx) => (
-                        <option key={idx} value={idx}>{m}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <select 
-                      value={rentYear}
-                      onChange={(e) => setRentYear(parseInt(e.target.value))}
-                      className="w-full rounded-md border-emerald-200 border p-2 text-sm text-slate-700 focus:ring-1 focus:ring-emerald-500 outline-none"
-                    >
-                      <option value={2023}>2023</option>
-                      <option value={2024}>2024</option>
-                      <option value={2025}>2025</option>
-                      <option value={2026}>2026</option>
-                    </select>
-                  </div>
-                </div>
              </div>
-          )}
+             
+             <div className="grid grid-cols-2 gap-3">
+               <div>
+                 <select 
+                   value={rentMonth}
+                   onChange={(e) => setRentMonth(parseInt(e.target.value))}
+                   className={`w-full rounded-md border p-2 text-sm text-slate-700 outline-none ${type === TransactionType.INCOME ? 'border-emerald-200 focus:ring-1 focus:ring-emerald-500' : 'border-slate-300 focus:ring-1 focus:ring-blue-500'}`}
+                 >
+                   {months.map((m, idx) => (
+                     <option key={idx} value={idx}>{m}</option>
+                   ))}
+                 </select>
+               </div>
+               <div>
+                 <select 
+                   value={rentYear}
+                   onChange={(e) => setRentYear(parseInt(e.target.value))}
+                   className={`w-full rounded-md border p-2 text-sm text-slate-700 outline-none ${type === TransactionType.INCOME ? 'border-emerald-200 focus:ring-1 focus:ring-emerald-500' : 'border-slate-300 focus:ring-1 focus:ring-blue-500'}`}
+                 >
+                   <option value={2023}>2023</option>
+                   <option value={2024}>2024</option>
+                   <option value={2025}>2025</option>
+                   <option value={2026}>2026</option>
+                 </select>
+               </div>
+             </div>
+             {type === TransactionType.INCOME && (
+                <p className="text-[10px] text-emerald-600 mt-2">
+                   * La fecha de cobro se sugiere a mes vencido (día 5 del mes sig).
+                </p>
+             )}
+             {type === TransactionType.EXPENSE && (
+                <p className="text-[10px] text-slate-500 mt-2">
+                   * Selecciona a qué mes corresponde este gasto, aunque se pague en otra fecha.
+                </p>
+             )}
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
              <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Fecha</label>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Fecha Real ({type === TransactionType.INCOME ? 'Cobro' : 'Pago'})
+              </label>
               <input 
                 type="date" 
                 required

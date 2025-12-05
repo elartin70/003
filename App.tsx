@@ -138,6 +138,10 @@ const App = () => {
   const handleSheetAddTransaction = (propertyId: string, type: TransactionType) => {
     const property = state.properties.find(p => p.id === propertyId);
     
+    // Default date logic: If viewMonth is previous month, set default date to 5th of current month
+    // Otherwise set to today.
+    let defaultDate = new Date().toISOString().split('T')[0];
+
     if (type === TransactionType.INCOME) {
       setTransactionModalData({
         propertyId,
@@ -146,15 +150,19 @@ const App = () => {
         rentMonth: viewMonth,
         rentYear: viewYear,
         description: property?.isCommon ? 'Ingreso Varios' : `Alquiler ${new Date(viewYear, viewMonth).toLocaleString('es-ES', { month: 'long' })}`,
-        date: new Date().toISOString().split('T')[0]
+        date: defaultDate
       });
     } else {
        setTransactionModalData({
         propertyId,
         type: TransactionType.EXPENSE,
         category: ExpenseCategory.MAINTENANCE,
-        date: new Date().toISOString().split('T')[0],
-        description: ''
+        date: defaultDate,
+        description: '',
+        // CRITICAL FIX: Pre-fill the period with the current view month/year
+        // so the expense appears on the sheet where the user clicked "Add"
+        rentMonth: viewMonth,
+        rentYear: viewYear
       });
     }
     setIsModalOpen(true);
