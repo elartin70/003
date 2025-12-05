@@ -1,0 +1,20 @@
+{
+  "short_name": "Control Alq",
+  "name": "Control de Alquileres Familiar",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/25/25694.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/25/25694.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1e293b",
+  "background_color": "#f8fafc"
+}
