@@ -1,4 +1,4 @@
-import { AppState, Transaction, Property, TransactionType, TransactionAgent } from '../types';
+import { AppState, Transaction, Property, TransactionType, TransactionAgent, ServiceType } from '../types';
 
 export const exportToCSV = (state: AppState, month: number, year: number) => {
   // 1. Filter data for the specific month
@@ -40,16 +40,14 @@ export const exportToCSV = (state: AppState, month: number, year: number) => {
   // Service Status
   const serviceRecord = state.serviceRecords.find(r => r.month === month && r.year === year);
   if (serviceRecord) {
-     rows.push([], ['Estado de Servicios (1=Pago, 0=Pendiente)'], ['Propiedad', 'Agua', 'Luz', 'Gas', 'ABL']);
+     rows.push([], ['Estado de Impuestos (1=Pago, 0=Pendiente)'], ['Propiedad', 'Rentas', 'Exp. Extra']);
      state.properties.forEach(p => {
         const record = state.serviceRecords.find(r => r.propertyId === p.id && r.month === month && r.year === year);
         if (record) {
           rows.push([
             p.name,
-            record.services.Agua ? 'SI' : 'NO',
-            record.services.Luz ? 'SI' : 'NO',
-            record.services.Gas ? 'SI' : 'NO',
-            record.services.ABL ? 'SI' : 'NO',
+            record.services[ServiceType.RENTAS] ? 'SI' : 'NO',
+            record.services[ServiceType.EXPENSAS_EXTRA] ? 'SI' : 'NO',
           ]);
         }
      });

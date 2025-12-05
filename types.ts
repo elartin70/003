@@ -1,3 +1,4 @@
+
 export enum TransactionType {
   INCOME = 'INCOME',
   EXPENSE = 'EXPENSE',
@@ -17,10 +18,8 @@ export enum ExpenseCategory {
 }
 
 export enum ServiceType {
-  WATER = 'Agua',
-  LIGHT = 'Luz',
-  GAS = 'Gas',
-  ABL = 'ABL'
+  RENTAS = 'Rentas',
+  EXPENSAS_EXTRA = 'Exp. Extra'
 }
 
 export interface Property {

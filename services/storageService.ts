@@ -5,11 +5,11 @@ const STORAGE_KEY = 'rent_control_data_v3';
 const COMMON_PROPERTY_ID = 'common-shared-expenses';
 
 const INITIAL_PROPERTIES: Property[] = [
-  { id: '1', name: 'Propiedad 1', address: 'Dirección 1', tenantName: 'Inquilino 1', rentAmount: 0, dueDay: 5 },
-  { id: '2', name: 'Propiedad 2', address: 'Dirección 2', tenantName: 'Inquilino 2', rentAmount: 0, dueDay: 5 },
-  { id: '3', name: 'Propiedad 3', address: 'Dirección 3', tenantName: 'Inquilino 3', rentAmount: 0, dueDay: 5 },
-  { id: '4', name: 'Propiedad 4', address: 'Dirección 4', tenantName: 'Inquilino 4', rentAmount: 0, dueDay: 5 },
-  { id: '5', name: 'Propiedad 5', address: 'Dirección 5', tenantName: 'Inquilino 5', rentAmount: 0, dueDay: 5 },
+  { id: '1', name: 'Prop-01', address: 'Florida 1920 PB', tenantName: 'Inquilino 1', rentAmount: 0, dueDay: 5 },
+  { id: '2', name: 'Prop-02', address: 'Florida 1920 PA', tenantName: 'Inquilino 2', rentAmount: 0, dueDay: 5 },
+  { id: '3', name: 'Prop-03', address: 'Florida 1928 PH1', tenantName: 'Inquilino 3', rentAmount: 0, dueDay: 5 },
+  { id: '4', name: 'Prop-04', address: 'Florida 1928 PH2', tenantName: 'Inquilino 4', rentAmount: 0, dueDay: 5 },
+  { id: '5', name: 'Prop-05', address: 'Mz: 9 Casa:31', tenantName: 'Inquilino 5', rentAmount: 0, dueDay: 5 },
 ];
 
 const COMMON_PROPERTY: Property = {

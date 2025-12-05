@@ -121,10 +121,8 @@ const App = () => {
           month: viewMonth,
           year: viewYear,
           services: {
-            [ServiceType.WATER]: false,
-            [ServiceType.LIGHT]: false,
-            [ServiceType.GAS]: false,
-            [ServiceType.ABL]: false,
+            [ServiceType.RENTAS]: false,
+            [ServiceType.EXPENSAS_EXTRA]: false,
             [service]: true 
           }
         };

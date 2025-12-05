@@ -31,7 +31,7 @@ export const ServiceChecklist: React.FC<ServiceChecklistProps> = ({ property, re
   return (
     <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
       <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-        <h3 className="font-semibold text-slate-700">Control de Servicios (Inquilino)</h3>
+        <h3 className="font-semibold text-slate-700">Control de Impuestos/Expensas</h3>
         <div className="flex gap-2 text-sm">
           <select 
             value={selectedMonth} 
@@ -52,7 +52,7 @@ export const ServiceChecklist: React.FC<ServiceChecklistProps> = ({ property, re
         </div>
       </div>
       
-      <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="p-4 grid grid-cols-2 gap-4">
         {Object.values(ServiceType).map((service) => {
           const isPaid = getServiceStatus(service);
           return (
@@ -83,7 +83,7 @@ export const ServiceChecklist: React.FC<ServiceChecklistProps> = ({ property, re
       <div className="px-4 pb-3">
          <p className="text-xs text-slate-400 flex items-center gap-1">
             <AlertCircle className="w-3 h-3" />
-            Haz click para marcar si el inquilino entregó el comprobante.
+            Haz click para marcar si ya se abonó.
          </p>
       </div>
     </div>

@@ -104,10 +104,8 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
         totalExpense,
         net,
         services: serviceRecord?.services || {
-          [ServiceType.LIGHT]: false,
-          [ServiceType.GAS]: false,
-          [ServiceType.WATER]: false,
-          [ServiceType.ABL]: false
+          [ServiceType.RENTAS]: false,
+          [ServiceType.EXPENSAS_EXTRA]: false
         }
       };
     });
@@ -191,7 +189,7 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
               <th className="p-4 w-1/5">Propiedad</th>
               <th className="p-4 w-1/6 text-center">Ingreso (Alquiler/Varios)</th>
               <th className="p-4 w-1/4">Gastos del Mes</th>
-              <th className="p-4 w-1/6 text-center">Control Servicios</th>
+              <th className="p-4 w-1/6 text-center">Control Impuestos</th>
               <th className="p-4 w-1/6 text-right bg-slate-200">Total Neto</th>
             </tr>
           </thead>
@@ -327,14 +325,14 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
                   ) : (
                     <>
                       <div className="flex justify-center gap-2">
-                        {[ServiceType.LIGHT, ServiceType.GAS, ServiceType.WATER, ServiceType.ABL].map(svc => {
+                        {[ServiceType.RENTAS, ServiceType.EXPENSAS_EXTRA].map(svc => {
                           const isPaid = row.services[svc];
-                          const label = svc.substring(0, 1);
+                          const label = svc === ServiceType.RENTAS ? 'R' : 'E';
                           return (
                             <button
                               key={svc}
                               onClick={() => onToggleService(row.property.id, svc)}
-                              title={`${svc}: ${isPaid ? 'Comprobante Entregado' : 'Pendiente'}`}
+                              title={`${svc}: ${isPaid ? 'Pagado' : 'Pendiente'}`}
                               className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all border-2 ${
                                 isPaid 
                                   ? 'bg-blue-600 border-blue-600 text-white shadow-sm' 
@@ -347,7 +345,7 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
                         })}
                       </div>
                       <div className="text-center mt-2">
-                         <span className="text-[10px] text-slate-400">L / G / A / A</span>
+                         <span className="text-[10px] text-slate-400">RENTAS / EXP. EXTRA</span>
                       </div>
                     </>
                   )}
@@ -454,8 +452,9 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
                {/* Services */}
                {!row.property.isCommon && (
                  <div className="flex gap-1">
-                    {[ServiceType.LIGHT, ServiceType.GAS, ServiceType.WATER, ServiceType.ABL].map(svc => {
+                    {[ServiceType.RENTAS, ServiceType.EXPENSAS_EXTRA].map(svc => {
                         const isPaid = row.services[svc];
+                        const label = svc === ServiceType.RENTAS ? 'R' : 'E';
                         return (
                           <button
                             key={svc}
@@ -466,7 +465,7 @@ export const MonthlySheet: React.FC<MonthlySheetProps> = ({
                                 : 'bg-white border-slate-300 text-slate-300'
                             }`}
                           >
-                            {svc.substring(0, 1)}
+                            {label}
                           </button>
                         );
                     })}
