@@ -74,7 +74,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 </li>
                 <li className="flex items-start gap-2">
                   <div className="bg-amber-100 p-1 rounded text-amber-700"><Upload size={14} /></div>
-                  <span>En el Celular: Abre la App, ve a <b>"Datos"</b> -> <b>"Restaurar Copia"</b> y elige el archivo.</span>
+                  <span>En el Celular: Abre la App, ve a <b>"Datos"</b> &rarr; <b>"Restaurar Copia"</b> y elige el archivo.</span>
                 </li>
               </ul>
             </div>
